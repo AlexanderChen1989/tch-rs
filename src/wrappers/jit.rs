@@ -239,7 +239,7 @@ impl From<&str> for IValue {
 }
 
 impl IValue {
-    pub(super) fn to_c(&self) -> Result<*mut CIValue, TchError> {
+    pub fn to_c(&self) -> Result<*mut CIValue, TchError> {
         let c = unsafe_torch_err!(match self {
             IValue::Tensor(tensor) => ati_tensor(tensor.c_tensor),
             IValue::Int(i) => ati_int(*i),
@@ -302,7 +302,7 @@ impl IValue {
     }
 
     // This consumes the pointer and frees the associated memory (unless it is an Object).
-    pub(super) fn of_c(c_ivalue: *mut CIValue) -> Result<Self, TchError> {
+    pub fn of_c(c_ivalue: *mut CIValue) -> Result<Self, TchError> {
         let mut free = true;
         let tag = unsafe_torch_err!(ati_tag(c_ivalue));
         let v = match tag {
